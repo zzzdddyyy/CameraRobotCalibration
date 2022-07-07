@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraRobotCalibration", "CameraRobotCalibration\CameraRobotCalibration.csproj", "{05BFBFCF-4630-4044-9916-589DCCA5E798}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TisCameraRobotCalibration", "TisCameraRobotCalibration\TisCameraRobotCalibration.csproj", "{0FB84F61-01ED-4D46-B0EA-51527876CC12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Debug|x64.ActiveCfg = Debug|x64
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Debug|x64.Build.0 = Debug|x64
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Release|x64.ActiveCfg = Release|x64
+		{05BFBFCF-4630-4044-9916-589DCCA5E798}.Release|x64.Build.0 = Release|x64
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Debug|x64.ActiveCfg = Debug|x64
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Debug|x64.Build.0 = Debug|x64
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Release|x64.ActiveCfg = Release|Any CPU
+		{0FB84F61-01ED-4D46-B0EA-51527876CC12}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE48BAC3-7A19-4F40-A59A-2E605A973AD6}
+	EndGlobalSection
+EndGlobal
