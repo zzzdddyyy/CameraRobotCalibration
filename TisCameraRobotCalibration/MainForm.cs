@@ -58,19 +58,21 @@ namespace TisCameraRobotCalibration
         RobTarget robTarget;
         CoordinateSystemType coordinateSystemType = CoordinateSystemType.Base;
 
-        PointF[] nineRobotPoints = new PointF[9];//标定的9点机器人坐标
-        PointF[] nineCameraPoints = new PointF[9];//标定的9点相机坐标
+        //PointF[] nineRobotPoints = new PointF[9];//标定的9点机器人坐标
+        //PointF[] nineCameraPoints = new PointF[9];//标定的9点相机坐标
         Matrix<double> rigidTransform = new Matrix<double>(2, 3);//刚性变换矩阵
         private RapidData rd_pCalibrate, rd_caliPositon;
 
         private bool robMoveDone = false;
         private bool SYSTEMSATART = false;
         private Thread calibThread;
-        Matrix<double> eyeToHandMat = new Matrix<double>(3, 4);//最终手眼变换矩阵
+        //Matrix<double> eyeToHandMat = new Matrix<double>(3, 4);//最终手眼变换矩阵
 
         public MainForm()
         {
             InitializeComponent();
+            Width = 1080;
+            Height = 960;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -366,6 +368,10 @@ namespace TisCameraRobotCalibration
 
         }
         #endregion
+        private void tssResetError_Click(object sender, EventArgs e)
+        {
+
+        }
 
         #region 3、Euler Calibration
         private void btnTrigger_Click(object sender, EventArgs e)
@@ -376,7 +382,7 @@ namespace TisCameraRobotCalibration
                     myBmp = null;
                     //触发一帧
                     SoftTrigger(IcImageCtrl);
-                    await System.Threading.Tasks.Task.Delay(500);
+                    await System.Threading.Tasks.Task.Delay(2000);
                     if (myBmp == null)
                     {
                         throw new Exception($"执行标定时，未获取到图像");
@@ -467,11 +473,9 @@ namespace TisCameraRobotCalibration
                     rigidTransform[1, 0] = img.Data[1, 0, 0];
                     rigidTransform[1, 1] = img.Data[1, 1, 0];
                     rigidTransform[1, 2] = img.Data[1, 2, 0];
-                    File.AppendAllText(@".\Results\EyeToHandMat.txt", $"{DateTime.Now.ToString()}\r\n{eyeToHandMat[0, 0]},{eyeToHandMat[0, 1]},{eyeToHandMat[0, 2]},{eyeToHandMat[0, 3]}\r\n" +
-                        $"{eyeToHandMat[1, 0]},{eyeToHandMat[1, 1]},{eyeToHandMat[1, 2]},{eyeToHandMat[1, 3]}\r\n" +
-                        $"{eyeToHandMat[2, 0]},{eyeToHandMat[2, 1]},{eyeToHandMat[2, 2]},{eyeToHandMat[2, 3]}\r\n\r\n");
-                    //File.AppendAllText(@".\Results\Bot4_EyeToHandMat.txt", $"{DateTime.Now.ToString()} + {cmbCoordinateSystemType.SelectedItem.ToString()}\r\n{img.Data[0, 0, 0].ToString()},{img.Data[0, 1, 0].ToString()},{img.Data[0, 2, 0].ToString()}\r\n" +
-                    //   $"{img.Data[1, 0, 0].ToString()},{img.Data[1, 1, 0].ToString()},{img.Data[1, 2, 0].ToString()}\r\n\r\n");
+
+                    File.AppendAllText(@".\Results\EyeToHandMat.txt", $"{DateTime.Now.ToString()} + {cmbCoordinateSystemType.SelectedItem.ToString()}\r\n{img.Data[0, 0, 0].ToString()},{img.Data[0, 1, 0].ToString()},{img.Data[0, 2, 0].ToString()}\r\n" +
+                       $"{img.Data[1, 0, 0].ToString()},{img.Data[1, 1, 0].ToString()},{img.Data[1, 2, 0].ToString()}\r\n\r\n");
                 }
                 else
                 {
@@ -773,7 +777,47 @@ namespace TisCameraRobotCalibration
             nineRP.Clear();
             this.Text = $"No.{nineWP.Count} 个";
         }
-        #endregion、
+
+        private void 导入变换矩阵ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // 创建一个 StreamReader 的实例来读取文件 
+                // using 语句也能关闭 StreamReader
+                using (StreamReader sr = new StreamReader(".\\Results\\EyeToHandMat.txt"))
+                {
+                    string line;
+                    int lineNum = 0;
+                    // 从文件读取并显示行，直到文件的末尾 
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        Console.WriteLine(line);
+                        if (lineNum == 1)
+                        {
+                            rigidTransform[0, 0] = double.Parse(line.Split(',')[0]);
+                            rigidTransform[0, 1] = double.Parse(line.Split(',')[1]);
+                            rigidTransform[0, 2] = double.Parse(line.Split(',')[2]);
+                        }
+                        else if (lineNum == 2)
+                        {
+                            rigidTransform[1, 0] = double.Parse(line.Split(',')[0]);
+                            rigidTransform[1, 1] = double.Parse(line.Split(',')[1]);
+                            rigidTransform[1, 2] = double.Parse(line.Split(',')[2]);
+                        }
+
+                        lineNum++;
+                    }
+                }
+                txtMsg.Text += DateTime.Now.ToString("HH:mm:ss") + "：标定参数加载完成\r\n";
+            }
+            catch (Exception ex)
+            {
+                // 向用户显示出错消息
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(ex.Message);
+            }
+        }
+        #endregion
 
         #region 5、参数转换
         private void btnImportTxt_Click(object sender, EventArgs e)
@@ -1364,45 +1408,7 @@ namespace TisCameraRobotCalibration
             worldY = worP[1, 0] / worP[2, 0];
         }
 
-        private void 加载标定结果ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // 创建一个 StreamReader 的实例来读取文件 
-                // using 语句也能关闭 StreamReader
-                using (StreamReader sr = new StreamReader(".\\Results\\EyeToHandMat.txt"))
-                {
-                    string line;
-                    int lineNum = 0;
-                    // 从文件读取并显示行，直到文件的末尾 
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        Console.WriteLine(line);
-                        if (lineNum == 1)
-                        {
-                            rigidTransform[0, 0] = double.Parse(line.Split(',')[0]);
-                            rigidTransform[0, 1] = double.Parse(line.Split(',')[1]);
-                            rigidTransform[0, 2] = double.Parse(line.Split(',')[2]);
-                        }
-                        else if (lineNum == 2)
-                        {
-                            rigidTransform[1, 0] = double.Parse(line.Split(',')[0]);
-                            rigidTransform[1, 1] = double.Parse(line.Split(',')[1]);
-                            rigidTransform[1, 2] = double.Parse(line.Split(',')[2]);
-                        }
 
-                        lineNum++;
-                    }
-                }
-                txtMsg.Text += DateTime.Now.ToString("HH:mm:ss") + "：标定参数加载完成\r\n";
-            }
-            catch (Exception ex)
-            {
-                // 向用户显示出错消息
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(ex.Message);
-            }
-        }
 
         private void LoadMatrix()
         {
@@ -1437,6 +1443,14 @@ namespace TisCameraRobotCalibration
 
             //Console.WriteLine("nineRobotPoints Count :"+ nineRobotPoints.Count<MCvPoint3D32f>());
         }
+
+        private void txtResult_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+
+
 
 
 
